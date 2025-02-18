@@ -1,5 +1,10 @@
 package Controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import Model.Account;
+import Service.AccountService;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
@@ -14,10 +19,19 @@ public class SocialMediaController {
      * suite must receive a Javalin object from this method.
      * @return a Javalin app object which defines the behavior of the Javalin controller.
      */
+
+     AccountService accountService;
+
+     public SocialMediaController(){
+        this.accountService = new AccountService();
+     }
     public Javalin startAPI() {
         Javalin app = Javalin.create();
         app.get("example-endpoint", this::exampleHandler);
 
+        //Process user registration
+        app.post("/register", this::registerUserHandler);
+        app.post("/login", this::loginUserHandler);
         return app;
     }
 
@@ -27,6 +41,32 @@ public class SocialMediaController {
      */
     private void exampleHandler(Context context) {
         context.json("sample text");
+    }
+
+
+    // User registration handler
+    private void registerUserHandler(Context ctx){
+        Account newAccount = ctx.bodyAsClass(Account.class);
+        Account registeredAccount = accountService.registerUser(newAccount);
+        if(registeredAccount != null){
+            ctx.json(registeredAccount);
+        }else{
+            ctx.status(400);
+        }
+        
+    }
+
+    // User login handler
+    private void loginUserHandler(Context ctx) throws JsonProcessingException{
+        ObjectMapper mapper = new ObjectMapper();
+        Account loginAccount = mapper.readValue(ctx.body(), Account.class);
+        boolean loginSucess = accountService.loginCheck(loginAccount);
+        
+        if(loginSucess){
+            System.out.println("Log in successfully!");
+        }else{
+            ctx.status(401);
+        }
     }
 
 
