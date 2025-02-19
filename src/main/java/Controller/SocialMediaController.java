@@ -39,7 +39,10 @@ public class SocialMediaController {
         // User Login
         app.post("/login", this::loginUserHandler);
         app.post("/submit-message", this:: newMessageHandler);
-        app.get("/allMessages", this::allMessageHandler);
+        app.get("/messages", this::allMessageHandler);
+        app.get("/messages/{message_id}", this::findMessageByIdHandler);
+
+
         return app;
     }
 
@@ -92,6 +95,13 @@ public class SocialMediaController {
     private void allMessageHandler(Context ctx){
         List<Message> msgLst = messageService.getAllMessages();
         ctx.json(msgLst);
+    }
+
+    //Find message by ID
+    private void findMessageByIdHandler(Context ctx){
+        int messageId = Integer.parseInt(ctx.pathParam("message_id")); 
+        Message msg = MessageService.getMessageById(messageId);
+        ctx.json(msg);
     }
 
 
