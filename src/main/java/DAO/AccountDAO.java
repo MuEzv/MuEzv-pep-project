@@ -14,8 +14,28 @@ import Model.Account;
 public class AccountDAO {
     
 
-    // GET ALL AUTHORS FROM TABLE ACCOUNT
-    public List<String> getAllAccounts(){
+    // GET ALL Account FROM TABLE ACCOUNT
+    public List<Account> getAllAccounts(){
+        Connection connection = ConnectionUtil.getConnection();
+        List<Account> accounts = new ArrayList<>();
+        
+        try{
+            String sql = "SELECT ACCOUNT_ID, USERNAME, PASSWORD FROM ACCOUNT";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                accounts.add(new Account(rs.getInt(1),rs.getString(2), rs.getString(3)));
+            }
+            
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return accounts;
+
+    }
+
+    // GET ALL Account username FROM TABLE ACCOUNT
+    public List<String> getAllAccountsName(){
         Connection connection = ConnectionUtil.getConnection();
         List<String> accounts = new ArrayList<>();
         

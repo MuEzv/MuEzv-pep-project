@@ -34,7 +34,7 @@ public class AccountService {
 
     // Check if there exists username in the database
     private boolean checkIfExist(Account account){
-        List<String> accounts = accountDAO.getAllAccounts();
+        List<String> accounts = accountDAO.getAllAccountsName();
         return accounts.contains(account.getUsername());
     }
 
