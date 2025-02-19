@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.h2.command.Prepared;
 
@@ -35,6 +37,29 @@ public class MessageDAO {
             System.out.println(e.getMessage());
         }
 
+        return null;
+    }
+
+    //Retrieve all messages
+    public List<Message> getAllMessages(){
+
+        try{
+            Connection connection = ConnectionUtil.getConnection();
+            String sql = "SELECT MESSAGE_ID, POSTED_BY, MESSAGE_TEXT, TIME_POSTED_RPOCH FROM MESSAGE";
+
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            List<Message> mlst = new ArrayList<>();
+            while(rs.next()){
+                mlst.add(new Message(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getLong(4)));
+
+            }
+            return mlst;
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+        
         return null;
     }
 

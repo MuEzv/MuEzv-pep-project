@@ -38,5 +38,14 @@ public class MessageService {
         }
         return null;
     }
+
+
+    /**
+     * 4. Retriieve all message
+     * 
+     */
+    public List<Message> getAllMessages() {
+        return messageDAO.getAllMessages();
+    }
 }
 
