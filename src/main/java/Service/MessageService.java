@@ -27,16 +27,11 @@ public class MessageService {
      */
     public Message creatMessage(Message msg){
         //check message text
-        if(msg.getMessage_text() == null || msg.getMessage_text().length() > 255) return null;
+        if(msg.getMessage_text() == null ||msg.getMessage_text().isBlank() ||  msg.getMessage_text().length() > 255) return null;
         //Check posted_by
-        List<Account> accounts = accountDAO.getAllAccounts();
-        for(Account a : accounts){
-            // if posted_by id exists, insert new message
-            if(a.getAccount_id() == msg.getPosted_by()){
-                return messageDAO.insertMessage(msg);
-            }
-        }
-        return null;
+        Account account = accountDAO.findAccountbyId(msg.getPosted_by());
+        if(account == null) return null;
+        return messageDAO.insertMessage(msg);
     }
 
 
@@ -75,7 +70,7 @@ public class MessageService {
 
       public Message updateMessageById(int message_id, String new_text){
         Message msg = getMessageById(message_id);
-        if(new_text == null || new_text.length() > 255) return null;
+        if(new_text == null || new_text.isBlank() || new_text.length() > 255) return null;
         if(msg != null){
             return messageDAO.updateMessageById(message_id, new_text);
         }

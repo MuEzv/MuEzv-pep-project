@@ -38,7 +38,7 @@ public class SocialMediaController {
         app.post("/register", this::registerUserHandler);
         // User Login
         app.post("/login", this::loginUserHandler);
-        app.post("/submit-message", this:: newMessageHandler);
+        app.post("/messages", this:: newMessageHandler);
         app.get("/messages", this::allMessageHandler);
         app.get("/messages/{message_id}", this::findMessageByIdHandler);
         app.delete("/messages/{message_id}", this::deleteMessageByIdHandler);
@@ -72,10 +72,10 @@ public class SocialMediaController {
     private void loginUserHandler(Context ctx) throws JsonProcessingException{
         ObjectMapper mapper = new ObjectMapper();
         Account loginAccount = mapper.readValue(ctx.body(), Account.class);
-        boolean loginSucess = accountService.loginCheck(loginAccount);
+        Account loggedInAccount = accountService.loginCheck(loginAccount);
         
-        if(loginSucess){
-            System.out.println("Log in successfully!");
+        if(loggedInAccount != null){
+            ctx.json(loggedInAccount).status(200);
         }else{
             ctx.status(401);
         }
@@ -86,7 +86,7 @@ public class SocialMediaController {
         Message msg = ctx.bodyAsClass(Message.class);
         Message submitMsg = messageService.creatMessage(msg);
         if(submitMsg != null){
-            ctx.json(submitMsg);
+            ctx.json(submitMsg).status(200);
         }else{
             ctx.status(400);
         }

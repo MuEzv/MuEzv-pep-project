@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,18 +21,19 @@ public class MessageDAO {
         Connection connection = ConnectionUtil.getConnection();
 
         try{
-            String sql = "INSERT INTO MESSAGE (POSTED_BY, MESSAGE_TEXT, TIME_POSTED_RPOCH) VALUES(?, ?, ?)";
-            PreparedStatement ps = connection.prepareStatement(sql);
+            String sql = "INSERT INTO MESSAGE (POSTED_BY, MESSAGE_TEXT, TIME_POSTED_EPOCH) VALUES(?, ?, ?)";
+            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             
             ps.setInt(1, msg.getPosted_by());
             ps.setString(2, msg.getMessage_text());
             ps.setLong(3, msg.getTime_posted_epoch());
 
-            ResultSet rs = ps.getGeneratedKeys();
-
-            if(rs.next()){
-                int generated_message_id = (int) rs.getInt(1);
-                return new Message(generated_message_id, msg.getPosted_by(), msg.getMessage_text(), msg.getTime_posted_epoch());
+            int row = ps.executeUpdate();
+            if(row > 0){ResultSet rs = ps.getGeneratedKeys();
+                if(rs.next()){
+                    int generated_message_id = (int) rs.getInt(1);
+                    return new Message(generated_message_id, msg.getPosted_by(), msg.getMessage_text(), msg.getTime_posted_epoch());
+                }
             }
         } catch(SQLException e){
             System.out.println(e.getMessage());
@@ -45,7 +47,7 @@ public class MessageDAO {
 
         try{
             Connection connection = ConnectionUtil.getConnection();
-            String sql = "SELECT MESSAGE_ID, POSTED_BY, MESSAGE_TEXT, TIME_POSTED_RPOCH FROM MESSAGE";
+            String sql = "SELECT MESSAGE_ID, POSTED_BY, MESSAGE_TEXT, TIME_POSTED_EPOCH FROM MESSAGE";
 
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();

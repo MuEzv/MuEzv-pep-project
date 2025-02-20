@@ -56,16 +56,17 @@ public class AccountDAO {
     
     
     //Insert an account into the author table
-    public Account inserAccount(Account account){
+    public Account insertAccount(Account account){
         Connection connection = ConnectionUtil.getConnection();
         try{
             String sql = "INSERT INTO ACCOUNT (USERNAME, PASSWORD) VALUES(?, ?)";
-            PreparedStatement ps = connection.prepareStatement(sql);
+            PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 
             // Set account parameter
             ps.setString(1, account.getUsername());
             ps.setString(2, account.getPassword());
             
+            ps.executeUpdate();
             //Get the generated account id
             ResultSet rs = ps.getGeneratedKeys();
 
@@ -90,7 +91,32 @@ public class AccountDAO {
 
             ps.setString(1, account.getUsername());
             ResultSet rs = ps.executeQuery();
-            return new Account(rs.getInt(1), rs.getString("USERNAME"), rs.getString("PASSWORD"));
+            if(rs.next()){ 
+                return new Account(rs.getInt("ACCOUNT_ID"), 
+                                    rs.getString("USERNAME"), 
+                                    rs.getString("PASSWORD"));
+            }
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
+    //Find account
+    public Account findAccountbyId(int account_id){
+        Connection connection = ConnectionUtil.getConnection();
+        try{
+            String sql = "SELECT USERNAME, PASSWORD FROM ACCOUNT WHERE ACCOUNT_ID = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+
+            ps.setInt(1, account_id);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                return new Account(rs.getInt("ACCOUNT_ID"), 
+                                rs.getString("USERNAME"), 
+                                rs.getString("PASSWORD"));
+            }
+           
         }catch(SQLException e){
             System.out.println(e.getMessage());
         }

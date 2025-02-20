@@ -1,11 +1,9 @@
 package Service;
 
-import java.sql.Connection;
 import java.util.List;
 
 import DAO.AccountDAO;
 import Model.Account;
-import Util.ConnectionUtil;
 
 public class AccountService {
     private AccountDAO accountDAO;
@@ -23,11 +21,13 @@ public class AccountService {
      * */ 
     public Account registerUser(Account account){
         // Check if the username exists in database OR null
-        if(null == account.getUsername() || checkIfExist(account)) return null;
+        if(account.getUsername() == null|| 
+            account.getUsername().isBlank() || 
+            checkIfExist(account)) return null;
         //Check password length >= 4
-        if(account.getPassword().length() < 4) return null;
+        if(account.getPassword() == null || account.getPassword().length() < 4) return null;
 
-        Account addedAccount = accountDAO.inserAccount(account);
+        Account addedAccount = accountDAO.insertAccount(account);
 
         return addedAccount;
     }
@@ -49,15 +49,14 @@ public class AccountService {
      * 
      */
 
-     public boolean loginCheck(Account account){
+     public Account loginCheck(Account account){
         //check if username exists
-        if(!checkIfExist(account)) return false;
         Account retrievedAccount = accountDAO.findAccount(account);
 
         //Check if password match
-        if(retrievedAccount.getPassword().equals(account.getPassword())) return true;
+        if(retrievedAccount != null && retrievedAccount.getPassword().equals(account.getPassword())) return true;
         
-        return false;
+        return null;
      }
 
    
