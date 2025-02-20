@@ -65,5 +65,21 @@ public class MessageService {
         return messageDAO.deleteMessageById(message_id);
         
      }
+
+     /**
+      * 7. Update message by id
+      * 7.1 message_id exist
+      * 7.2 message_text not blank && length() <= 255
+        @return the updated message
+      */
+
+      public Message updateMessageById(int message_id, String new_text){
+        Message msg = getMessageById(message_id);
+        if(new_text == null || new_text.length() > 255) return null;
+        if(msg != null){
+            return messageDAO.updateMessageById(message_id, new_text);
+        }
+        return null;
+      }
 }
 
