@@ -43,6 +43,7 @@ public class SocialMediaController {
         app.get("/messages/{message_id}", this::findMessageByIdHandler);
         app.delete("/messages/{message_id}", this::deleteMessageByIdHandler);
         app.patch("/messages/{message_id}", this::updateMessageByIdHandler);
+        app.get("/accounts/{account_id}/messages", this::getMessagesByUserHandler);
         return app;
     }
 
@@ -128,6 +129,16 @@ public class SocialMediaController {
             ctx.json(updatedMsg).status(200);
         }else{
             ctx.status(400);
+        }
+    }
+
+    private void getMessagesByUserHandler(Context ctx){
+        int user_id = Integer.parseInt(ctx.pathParam("account_id"));
+        List<Message> mlst = messageService.getMessagesbyUser(user_id);
+        if(mlst != null){
+            ctx.json(mlst);
+        }else{
+            ctx.result("").status(200);
         }
     }
 

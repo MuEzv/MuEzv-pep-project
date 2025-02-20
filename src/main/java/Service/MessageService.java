@@ -81,5 +81,14 @@ public class MessageService {
         }
         return null;
       }
+
+      /**
+       * 8. Retrieve all message by posted_by
+       * 
+       */
+      public List<Message> getMessagesbyUser(int account_id){
+        List<Message> mlst = messageDAO.getMessagebyUser(account_id);
+        return mlst;
+      }
 }
 
