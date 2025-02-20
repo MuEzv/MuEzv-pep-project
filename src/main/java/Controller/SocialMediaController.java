@@ -29,6 +29,7 @@ public class SocialMediaController {
 
      public SocialMediaController(){
         this.accountService = new AccountService();
+        this.messageService = new MessageService();
      }
     public Javalin startAPI() {
         Javalin app = Javalin.create();
@@ -83,6 +84,7 @@ public class SocialMediaController {
 
     // Create new Message
     private void newMessageHandler(Context ctx){
+        
         Message msg = ctx.bodyAsClass(Message.class);
         Message submitMsg = messageService.creatMessage(msg);
         if(submitMsg != null){
@@ -102,11 +104,8 @@ public class SocialMediaController {
     private void findMessageByIdHandler(Context ctx){
         int messageId = Integer.parseInt(ctx.pathParam("message_id")); 
         Message msg = messageService.getMessageById(messageId);
-        if(msg != null){
-            ctx.json(msg).status(200);
-        }else{
-            ctx.result("").status(200);
-        }
+        ctx.json(msg).status(200);
+        
     }
 
     //Delete Message by id

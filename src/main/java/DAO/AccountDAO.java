@@ -122,4 +122,20 @@ public class AccountDAO {
         }
         return null;
     }
+
+      // ACheck if username exists
+      public boolean usernameExists(String username){
+        try{
+            Connection connection =ConnectionUtil.getConnection();
+            String sql = "SELECT USER_ID FROM ACCOUNT WHERE USERNAME = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+
+            ps.setString(1, username);
+            return ps.executeQuery().next();
+
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

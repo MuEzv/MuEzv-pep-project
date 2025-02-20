@@ -7,9 +7,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.h2.command.Prepared;
-
 import Model.Message;
 import Util.ConnectionUtil;
 
@@ -18,9 +15,8 @@ public class MessageDAO {
 
     //Insert Message
     public Message insertMessage(Message msg){
-        Connection connection = ConnectionUtil.getConnection();
-
         try{
+            Connection connection = ConnectionUtil.getConnection();
             String sql = "INSERT INTO MESSAGE (POSTED_BY, MESSAGE_TEXT, TIME_POSTED_EPOCH) VALUES(?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             
@@ -67,9 +63,7 @@ public class MessageDAO {
 
     //Get Message by ID
     public Message getMessageById(int message_id){
-
         try{
-
             Connection connection = ConnectionUtil.getConnection();
             String sql = "SELECT MESSAGE_ID, POSTED_BY, MESSAGE_TEXT, TIME_POSTED_EPOCH FROM MESSAGE WHERE MESSAGE_ID = ?";
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -140,4 +134,6 @@ public class MessageDAO {
         }
         return null;
     }
+
+  
 } // class 

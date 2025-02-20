@@ -34,8 +34,7 @@ public class AccountService {
 
     // Check if there exists username in the database
     private boolean checkIfExist(Account account){
-        List<String> accounts = accountDAO.getAllAccountsName();
-        return accounts.contains(account.getUsername());
+        return accountDAO.usernameExists(account.getUsername());
     }
 
     /**
@@ -54,7 +53,10 @@ public class AccountService {
         Account retrievedAccount = accountDAO.findAccount(account);
 
         //Check if password match
-        if(retrievedAccount != null && retrievedAccount.getPassword().equals(account.getPassword())) return true;
+        if(retrievedAccount != null && 
+            retrievedAccount.getPassword().equals(account.getPassword())){ 
+                return retrievedAccount;
+            }
         
         return null;
      }
