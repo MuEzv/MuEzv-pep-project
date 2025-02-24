@@ -27,7 +27,7 @@ public class MessageService {
      */
     public Message creatMessage(Message msg){
         //check message text
-        if(msg.getMessage_text() == null ||msg.getMessage_text().isBlank() ||  msg.getMessage_text().length() > 255) return null;
+        if(msg.getMessage_text() == null || msg.getMessage_text().isBlank() ||  msg.getMessage_text().length() > 255) return null;
         //Check posted_by
         Account account = accountDAO.findAccountbyId(msg.getPosted_by());
         if(account == null) return null;

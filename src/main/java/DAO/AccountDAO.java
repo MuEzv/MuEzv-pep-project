@@ -86,7 +86,7 @@ public class AccountDAO {
     public Account findAccount(Account account){
         Connection connection = ConnectionUtil.getConnection();
         try{
-            String sql = "SELECT USERNAME, PASSWORD FROM ACCOUNT WHERE USERNAME = ?";
+            String sql = "SELECT ACCOUNT_ID, USERNAME, PASSWORD FROM ACCOUNT WHERE USERNAME = ?";
             PreparedStatement ps = connection.prepareStatement(sql);
 
             ps.setString(1, account.getUsername());
@@ -106,7 +106,7 @@ public class AccountDAO {
     public Account findAccountbyId(int account_id){
         Connection connection = ConnectionUtil.getConnection();
         try{
-            String sql = "SELECT USERNAME, PASSWORD FROM ACCOUNT WHERE ACCOUNT_ID = ?";
+            String sql = "SELECT ACCOUNT_ID, USERNAME, PASSWORD FROM ACCOUNT WHERE ACCOUNT_ID = ?";
             PreparedStatement ps = connection.prepareStatement(sql);
 
             ps.setInt(1, account_id);
@@ -127,7 +127,7 @@ public class AccountDAO {
       public boolean usernameExists(String username){
         try{
             Connection connection =ConnectionUtil.getConnection();
-            String sql = "SELECT USER_ID FROM ACCOUNT WHERE USERNAME = ?";
+            String sql = "SELECT ACCOUNT_ID FROM ACCOUNT WHERE USERNAME = ?";
             PreparedStatement ps = connection.prepareStatement(sql);
 
             ps.setString(1, username);
